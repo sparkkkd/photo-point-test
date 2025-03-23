@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import { IProduct } from '../../models/product.model'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../../store/hooks'
+import { addToCart } from '../../store/slices/productsSlice'
 
 interface ProductCardProps {
 	product: IProduct
@@ -8,47 +10,43 @@ interface ProductCardProps {
 
 export const ProductCard: FC<ProductCardProps> = ({ product }) => {
 	const navigate = useNavigate()
+	const dispatch = useAppDispatch()
 
 	const titleMaxLength = 20
-	const descriptionMaxLength = 50
 
 	let shortTitle =
 		product.title.length >= titleMaxLength - 3
 			? product.title.slice(0, titleMaxLength - 3) + '...'
 			: product.title
 
-	let shortDescription =
-		product.description.length >= descriptionMaxLength - 3
-			? product.description.slice(0, descriptionMaxLength - 3) + '...'
-			: product.description
-
 	const handleAddToCart = (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 	) => {
 		e.stopPropagation()
 		e.preventDefault()
-		alert('Product added to cart!')
+		dispatch(addToCart(product))
 	}
 
 	return (
 		<div
 			onClick={() => navigate(`/product/${product.id}`)}
-			className='flex flex-col items-center gap-2.5 relative p-4.5 shadow-sm rounded-2xl cursor-pointer hover:shadow-xl transition-all duration-300 basis-[32.5%]'
+			className='flex flex-col items-center gap-2.5 relative bg-white p-4.5 shadow-sm rounded-2xl cursor-pointer hover:shadow-xl transition-all duration-300 basis-[32.5%]'
 		>
-			<div className='h-[200px] w-[100px]'>
+			<div className='absolute top-2 left-2 p-2.5 text-white rounded-2xl bg-black/30 font-semibold'>
+				{product.category}
+			</div>
+			<div className='h-[200px] w-full'>
 				<img
 					className='h-full w-full object-contain'
 					src={product.image}
 					alt='product-preview'
 				/>
 			</div>
-			<h4 className='font-bold text-xl text-center'>{shortTitle}</h4>
-			<p className='text-center'>{shortDescription}</p>
-			<p className='font-bold'>{product.category}</p>
+			<h4 className='mt-7 font-bold text-xl text-center'>{shortTitle}</h4>
 			<p className='font-bold text-2xl mt-auto'>{product.price}$</p>
 			<button
 				onClick={handleAddToCart}
-				className='p-3 mt-auto text-indigo-700 font-semibold rounded-2xl cursor-pointer bg-blue-200 hover:bg-blue-400 transition-all duration-300'
+				className='p-3 mt-auto w-full text-stone-900 font-semibold border-stone-300 border-1 hover:bg-[#F2EDE7] hover:border-[#F2EDE7] rounded-2xl cursor-pointer transition-all duration-300'
 			>
 				Add to cart
 			</button>

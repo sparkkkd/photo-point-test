@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { IProduct } from '../../models/product.model'
+import { ICartProduct, IProduct } from '../../models/product.model'
 import { AxiosError } from 'axios'
 import { ProductService } from '../../api/Services/ProductService'
 
@@ -7,7 +7,7 @@ interface IInitialState {
 	products: IProduct[]
 	isLoading: boolean
 	isError: boolean
-	cart: IProduct[]
+	cart: ICartProduct[]
 }
 
 const initialState: IInitialState = {
@@ -29,10 +29,49 @@ export const getAllProducts = createAsyncThunk(
 	}
 )
 
-export const productSlice = createSlice({
+export const getProductsByCategory = createAsyncThunk(
+	'products/getByCategory',
+	async (category: string, { rejectWithValue }) => {
+		try {
+			const response = await ProductService.getByCategory(category)
+			return response.data
+		} catch (error: AxiosError | unknown) {
+			if (error instanceof AxiosError) return rejectWithValue(error.message)
+		}
+	}
+)
+
+const productSlice = createSlice({
 	name: 'products',
 	initialState,
-	reducers: {},
+	reducers: {
+		addToCart: (state, action: { payload: IProduct }) => {
+			const currentItem = state.cart.find(
+				(product) => product.id === action.payload.id
+			)
+			if (currentItem) {
+				state.cart.find((item) => item.id === action.payload.id)!.count += 1
+			} else {
+				state.cart.push({ ...action.payload, count: 1 })
+			}
+		},
+		removeAllFromCart: (state, action: { payload: number }) => {
+			state.cart = state.cart.filter((product) => product.id !== action.payload)
+		},
+		removeOneFromCart: (state, action: { payload: number }) => {
+			const currentItem = state.cart.find(
+				(product) => product.id === action.payload
+			)
+
+			if (currentItem?.count === 1) {
+				state.cart = state.cart.filter(
+					(product) => product.id !== action.payload
+				)
+			} else {
+				state.cart.find((item) => item.id === action.payload)!.count -= 1
+			}
+		},
+	},
 	extraReducers: (builder) => {
 		// Start getAllProducts
 		builder.addCase(getAllProducts.pending, (state) => {
@@ -51,7 +90,27 @@ export const productSlice = createSlice({
 			state.isLoading = false
 		})
 		// End getAllProducts
+
+		// Start getProductsByCategory
+		builder.addCase(getProductsByCategory.pending, (state) => {
+			state.isError = false
+			state.isLoading = true
+		})
+		builder.addCase(getProductsByCategory.fulfilled, (state, action) => {
+			if (action.payload) {
+				state.products = action.payload
+				state.isError = false
+				state.isLoading = false
+			}
+		})
+		builder.addCase(getProductsByCategory.rejected, (state) => {
+			state.isError = true
+			state.isLoading = false
+		})
+		// End getProductsByCategory
 	},
 })
 
 export default productSlice.reducer
+export const { addToCart, removeAllFromCart, removeOneFromCart } =
+	productSlice.actions

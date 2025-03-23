@@ -6,3 +6,7 @@ export interface IProduct {
 	category: string
 	image: string
 }
+
+export interface ICartProduct extends IProduct {
+	count: number
+}

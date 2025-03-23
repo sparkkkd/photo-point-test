@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import productSlice from './slices/productsSlice'
+import categorySlice from './slices/categorySlice'
 
 const rootReducer = combineReducers({
 	productSlice,
+	categorySlice,
 })
 
 export const store = configureStore({

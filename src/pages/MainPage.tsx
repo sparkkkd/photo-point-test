@@ -9,17 +9,22 @@ interface MainPageProps {}
 export const MainPage: FC<MainPageProps> = ({}) => {
 	const dispatch = useAppDispatch()
 	const { products } = useAppSelector((state) => state.productSlice)
+	const { activeCategory } = useAppSelector((state) => state.categorySlice)
 
 	useEffect(() => {
 		dispatch(getAllProducts())
 	}, [])
 
-	console.log(products)
-
 	return (
-		<div>
+		<div className='mt-25'>
 			<Container>
-				<h2 className='text-3xl font-bold text-center'>Catalog</h2>
+				<h2 className='text-6xl mb-7 uppercase tracking-widest font-bold text-center font-[Julius_Sans_One]'>
+					Catalog
+				</h2>
+
+				<div className='text-2xl mb-5 text-center first-letter:uppercase'>
+					{activeCategory}
+				</div>
 
 				<div className='flex flex-row flex-wrap gap-3.5'>
 					{products &&

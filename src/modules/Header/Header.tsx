@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -24,6 +24,9 @@ interface HeaderProps {}
 export const Header: FC<HeaderProps> = ({}) => {
 	const [open, setOpen] = useState<boolean>(false)
 	const categoryRef = useRef<HTMLDivElement>(null)
+
+	const location = useLocation()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		categoryRef.current?.addEventListener('mouseenter', () => setOpen(true))
@@ -72,6 +75,7 @@ export const Header: FC<HeaderProps> = ({}) => {
 										onClick={() => {
 											dispatch(getAllProducts())
 											dispatch(toggleActiveCategory('All'))
+											if (location.pathname !== '/') navigate('/')
 										}}
 									>
 										All
@@ -84,6 +88,7 @@ export const Header: FC<HeaderProps> = ({}) => {
 												onClick={() => {
 													dispatch(getProductsByCategory(category))
 													dispatch(toggleActiveCategory(category))
+													if (location.pathname !== '/') navigate('/')
 												}}
 												className='hover:bg-stone-200 p-1 first-letter:uppercase rounded-lg duration-300'
 											>

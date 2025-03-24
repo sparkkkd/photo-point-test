@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../store/hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { filterProducts } from '../../store/slices/productsSlice'
+import { scaleWithBlur } from '../../utils/animationVariants'
 
 interface FilterProps {
 	className?: string
@@ -58,24 +59,10 @@ export const Filter: FC<FilterProps> = ({ className, search, setSearch }) => {
 					{open && (
 						<motion.ul
 							className='absolute left-0 top-[100%] w-full z-10 bg-white shadow-2xl rounded-lg p-2.5 flex-col gap-1.5 flex'
-							initial={{
-								opacity: 0,
-								scale: 0,
-								filter: 'blur(10px)',
-								transition: { duration: 0.2 },
-							}}
-							animate={{
-								opacity: 1,
-								scale: 1,
-								filter: 'blur(0px)',
-								transition: { duration: 0.2 },
-							}}
-							exit={{
-								opacity: 0,
-								scale: 0,
-								filter: 'blur(5px)',
-								transition: { duration: 0.2 },
-							}}
+							variants={scaleWithBlur(0.2)}
+							initial='initial'
+							animate='animate'
+							exit='initial'
 						>
 							{SORT_LIST.map(({ name, value }) => (
 								<li

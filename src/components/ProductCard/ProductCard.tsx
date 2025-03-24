@@ -1,8 +1,10 @@
 import { FC } from 'react'
-import { IProduct } from '../../models/product.model'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../store/hooks'
 import { addToCart } from '../../store/slices/productsSlice'
+import { toast } from 'sonner'
+
+import { IProduct } from '../../models/product.model'
 
 interface ProductCardProps {
 	product: IProduct
@@ -25,6 +27,9 @@ export const ProductCard: FC<ProductCardProps> = ({ product }) => {
 		e.stopPropagation()
 		e.preventDefault()
 		dispatch(addToCart(product))
+		toast.message('Success', {
+			description: `${product.title} added to cart`,
+		})
 	}
 
 	return (

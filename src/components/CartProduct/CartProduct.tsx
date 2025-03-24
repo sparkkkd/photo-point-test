@@ -17,7 +17,7 @@ export const CartProduct: FC<CartProductProps> = ({ product }) => {
 	return (
 		<li
 			key={product.id}
-			className='w-full p-2.5 flex gap-2.5 bg-white shadow-sm rounded-2xl cursor-pointer hover:shadow-xl transition-all duration-300'
+			className='w-full p-2.5 flex gap-2.5 bg-white shadow-sm rounded-2xl hover:shadow-xl transition-all duration-300'
 		>
 			<div className='h-[200px] w-[200px]'>
 				<img

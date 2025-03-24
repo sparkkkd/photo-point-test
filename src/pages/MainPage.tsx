@@ -1,8 +1,10 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Container } from '../components/Container/Container'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { getAllProducts } from '../store/slices/productsSlice'
 import { ProductCard } from '../components/ProductCard/ProductCard'
+import { Filter } from '../components/Filter/Filter'
+import { IProduct } from '../models/product.model'
 
 interface MainPageProps {}
 
@@ -10,6 +12,11 @@ export const MainPage: FC<MainPageProps> = ({}) => {
 	const dispatch = useAppDispatch()
 	const { products } = useAppSelector((state) => state.productSlice)
 	const { activeCategory } = useAppSelector((state) => state.categorySlice)
+
+	const [search, setSearch] = useState<string>('')
+	const searchProduct: IProduct[] = products.filter((products) =>
+		products.title.toLowerCase().includes(search.toLowerCase())
+	)
 
 	useEffect(() => {
 		dispatch(getAllProducts())
@@ -26,9 +33,11 @@ export const MainPage: FC<MainPageProps> = ({}) => {
 					{activeCategory}
 				</div>
 
+				<Filter className='my-5.5' search={search} setSearch={setSearch} />
+
 				<div className='flex flex-row flex-wrap gap-3.5'>
-					{products &&
-						products.map((product) => (
+					{searchProduct &&
+						searchProduct.map((product) => (
 							<ProductCard key={product.id} product={product} />
 						))}
 				</div>

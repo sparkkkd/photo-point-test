@@ -71,6 +71,20 @@ const productSlice = createSlice({
 				state.cart.find((item) => item.id === action.payload)!.count -= 1
 			}
 		},
+		filterProducts: (
+			state,
+			action: { payload: 'higher' | 'lower' | 'az' | 'za' }
+		) => {
+			if (action.payload === 'higher') {
+				state.products.sort((a, b) => b.price - a.price)
+			} else if (action.payload === 'lower') {
+				state.products.sort((a, b) => a.price - b.price)
+			} else if (action.payload === 'az') {
+				state.products.sort((a, b) => a.title.localeCompare(b.title))
+			} else if (action.payload === 'za') {
+				state.products.sort((a, b) => b.title.localeCompare(a.title))
+			}
+		},
 	},
 	extraReducers: (builder) => {
 		// Start getAllProducts
@@ -112,5 +126,9 @@ const productSlice = createSlice({
 })
 
 export default productSlice.reducer
-export const { addToCart, removeAllFromCart, removeOneFromCart } =
-	productSlice.actions
+export const {
+	addToCart,
+	removeAllFromCart,
+	removeOneFromCart,
+	filterProducts,
+} = productSlice.actions

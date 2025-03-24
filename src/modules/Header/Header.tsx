@@ -1,6 +1,8 @@
-import { FC, useEffect } from 'react'
-
+import { FC, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { AnimatePresence, motion } from 'framer-motion'
+
 import {
 	getAllCategories,
 	toggleActiveCategory,
@@ -15,11 +17,28 @@ import { IoCartOutline } from 'react-icons/io5'
 import { FaShopify } from 'react-icons/fa6'
 
 import { Container } from '../../components/Container/Container'
-import { Link } from 'react-router-dom'
+import { scaleWithBlur } from '../../utils/animationVariants'
 
 interface HeaderProps {}
 
 export const Header: FC<HeaderProps> = ({}) => {
+	const [open, setOpen] = useState<boolean>(false)
+	const categoryRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		categoryRef.current?.addEventListener('mouseenter', () => setOpen(true))
+		categoryRef.current?.addEventListener('mouseleave', () => setOpen(false))
+
+		return () => {
+			categoryRef.current?.removeEventListener('mouseenter', () =>
+				setOpen(true)
+			)
+			categoryRef.current?.removeEventListener('mouseleave', () =>
+				setOpen(false)
+			)
+		}
+	}, [])
+
 	const { isError, isLoading, categories } = useAppSelector(
 		(state) => state.categorySlice
 	)
@@ -33,47 +52,55 @@ export const Header: FC<HeaderProps> = ({}) => {
 		<header className='border-stone-300 border-b-1 text-black fixed w-full left-0 top-0 z-20 bg-[#fcfaf8]'>
 			<Container>
 				<div className='py-5 flex items-center justify-between'>
+					<div
+						ref={categoryRef}
+						className='flex items-center text-xl cursor-pointer relative group z-10 hover:bg-stone-200 p-2.5 rounded-lg duration-300'
+					>
+						Browse categories
+						<IoIosArrowRoundDown size={25} />
+						<AnimatePresence>
+							{open && (
+								<motion.ul
+									variants={scaleWithBlur(0.2)}
+									initial='initial'
+									animate='animate'
+									exit='initial'
+									className='absolute top-[100%] p-3 rounded-2xl left-0 w-full bg-white'
+								>
+									<li
+										className='hover:bg-stone-200 rounded-lg duration-300 p-1 first-letter:uppercase'
+										onClick={() => {
+											dispatch(getAllProducts())
+											dispatch(toggleActiveCategory('All'))
+										}}
+									>
+										All
+									</li>
+									{!isLoading &&
+										!isError &&
+										categories.map((category, i) => (
+											<li
+												key={i}
+												onClick={() => {
+													dispatch(getProductsByCategory(category))
+													dispatch(toggleActiveCategory(category))
+												}}
+												className='hover:bg-stone-200 p-1 first-letter:uppercase rounded-lg duration-300'
+											>
+												{category}
+											</li>
+										))}
+								</motion.ul>
+							)}
+						</AnimatePresence>
+					</div>
+
 					<Link to='/'>
 						<div className='text-xl flex items-center gap-3'>
 							Ecom PhotoPaint
 							<FaShopify />
 						</div>
 					</Link>
-					<div className='flex items-center text-xl cursor-pointer relative group z-10'>
-						Browse categories
-						<IoIosArrowRoundDown size={25} />
-						<ul className='absolute top-[100%] p-3 rounded-2xl left-0 w-full bg-white hidden group-hover:block'>
-							<li
-								className='hover:bg-amber-50 p-1 first-letter:uppercase'
-								onClick={() => {
-									dispatch(getAllProducts())
-									dispatch(toggleActiveCategory('All'))
-								}}
-							>
-								All
-							</li>
-							{!isLoading &&
-								!isError &&
-								categories.map((category, i) => (
-									<li
-										key={i}
-										onClick={() => {
-											dispatch(getProductsByCategory(category))
-											dispatch(toggleActiveCategory(category))
-										}}
-										className='hover:bg-amber-50 p-1 first-letter:uppercase'
-									>
-										{category}
-									</li>
-								))}
-						</ul>
-					</div>
-
-					<input
-						type='text'
-						placeholder='Search...'
-						className='px-2.5 py-1.5 w-[600px] border-1 outline-stone-200 border-stone-200 rounded-2xl'
-					/>
 
 					<Link to='/cart'>
 						<div className='flex items-center gap-1 text-xl cursor-pointer'>

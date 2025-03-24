@@ -9,7 +9,7 @@ export const CartPage: FC<CartPageProps> = ({}) => {
 	const { cart } = useAppSelector((state) => state.productSlice)
 
 	return (
-		<div className='mt-25'>
+		<section className='mt-25'>
 			<Container>
 				<div className='flex flex-col'>
 					<h4 className='text-6xl text-center mb-3.5'>Cart</h4>
@@ -19,12 +19,12 @@ export const CartPage: FC<CartPageProps> = ({}) => {
 					) : (
 						<ul className='flex flex-col gap-6'>
 							{cart.map((product) => (
-								<CartProduct product={product} />
+								<CartProduct key={product.id} product={product} />
 							))}
 						</ul>
 					)}
 				</div>
 			</Container>
-		</div>
+		</section>
 	)
 }

@@ -23,7 +23,7 @@ export const MainPage: FC<MainPageProps> = ({}) => {
 	}, [])
 
 	return (
-		<div className='mt-25'>
+		<section className='mt-25'>
 			<Container>
 				<h2 className='text-6xl mb-7 uppercase tracking-widest font-bold text-center font-[Julius_Sans_One]'>
 					Catalog
@@ -42,6 +42,6 @@ export const MainPage: FC<MainPageProps> = ({}) => {
 						))}
 				</div>
 			</Container>
-		</div>
+		</section>
 	)
 }

@@ -55,6 +55,7 @@ export const Header: FC<HeaderProps> = ({}) => {
 		<header className='border-stone-300 border-b-1 text-black fixed w-full left-0 top-0 z-20 bg-[#fcfaf8]'>
 			<Container>
 				<div className='py-5 flex items-center justify-between'>
+					{/* Browse categories */}
 					<div
 						ref={categoryRef}
 						className='flex items-center text-xl cursor-pointer relative group z-10 hover:bg-stone-200 p-2.5 rounded-lg duration-300'
@@ -100,13 +101,15 @@ export const Header: FC<HeaderProps> = ({}) => {
 						</AnimatePresence>
 					</div>
 
-					<Link to='/'>
+					{/* Link home page */}
+					<Link to='/' className='absolute left-1/2 -translate-x-1/2'>
 						<div className='text-xl flex items-center gap-3'>
 							Ecom PhotoPaint
 							<FaShopify />
 						</div>
 					</Link>
 
+					{/* Cart */}
 					<Link to='/cart'>
 						<div className='flex items-center gap-1 text-xl cursor-pointer'>
 							Cart

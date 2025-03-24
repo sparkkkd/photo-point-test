@@ -26,10 +26,10 @@ interface ISortList {
 }
 
 const SORT_LIST: ISortList[] = [
-	{ name: 'Дешевле', value: 'lower' },
-	{ name: 'Дороже', value: 'higher' },
-	{ name: 'А-Я', value: 'az' },
-	{ name: 'Я-А', value: 'za' },
+	{ name: 'Cheaper', value: 'lower' },
+	{ name: 'Expensive', value: 'higher' },
+	{ name: 'A-Z', value: 'az' },
+	{ name: 'Z-A', value: 'za' },
 ]
 
 export const Filter: FC<FilterProps> = ({ className, search, setSearch }) => {
@@ -51,10 +51,10 @@ export const Filter: FC<FilterProps> = ({ className, search, setSearch }) => {
 		<div className={clsx('flex flex-row items-center', className)}>
 			<div
 				ref={sortRef}
-				className='flex flex-row items-center gap-1 cursor-pointer relative hover:bg-stone-200 p-2 rounded-lg duration-300 group'
+				className='w-[200px] justify-center flex flex-row items-center gap-1 cursor-pointer relative hover:bg-stone-200 p-2 rounded-lg duration-300 group'
 			>
 				<HiOutlineArrowsUpDown />
-				Сортировка
+				Sort
 				<AnimatePresence>
 					{open && (
 						<motion.ul
